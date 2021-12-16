@@ -34,6 +34,10 @@ import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 public class HelpfulUtilsBot {
     private final Logger log = LoggerFactory.getLogger(HelpfulUtilsBot.class);
 
+    public final int verID = 1;
+    public final String verString = "0.1.0-alpha";
+    public final String packageName = "io.github.mynametsthad.helpfulutilsbotline";
+
     public final String ChannelID = "1656718563";
     public final String ChannelAccessToken = "QgMnFxnTQDaCG0p3a0QduN0IA3kDU1Sk6NXCd6u4XpZZYI+6UwxG02L+2NU8a/9HfV4Fv/ZXRz/jSRvMBdNm9oG61Isa1dFBiqN9aUChDZJ1oGWzTB588lhgwlaZ9M6A/IPT9BL5MNW26RGVWDT1ZQdB04t89/1O/w1cDnyilFU=";
     public final String ChannelSecret = "0bf3be2ae818c27aa2caec62c1592332";
@@ -45,8 +49,13 @@ public class HelpfulUtilsBot {
     @EventMapping
     public Message handleCommandMessageEvent(MessageEvent<TextMessageContent> event) {
         if (event.getMessage().getText().startsWith(">")){
-            TextMessage returnMessage = new TextMessage("Command Recognized: '" + event.getMessage().getText().substring(1) + "' \n"
-                                                        + "Sender User ID: " + event.getSource().getSenderId() + ", " + event.getSource().getUserId());
+            TextMessage returnMessage = new TextMessage("'" + event.getMessage().getText().substring(1) + "': Invalid command and/or syntax!");
+            String rawCommand = event.getMessage().getText().substring(1);
+            String[] args = rawCommand.split(" ");
+            if (args[0].equalsIgnoreCase("ver")){
+                returnMessage = new TextMessage("HelpfulUtilsBot-LINE version " + verString + " (" + packageName + ":" + verString + "versionID: " + verID + ") \n" +
+                                                "by IWant2TryHard (https://github.com/MyNameTsThad/HelpfulUtilsBot-LINE)");
+            }
             return returnMessage;
         }
         return null;

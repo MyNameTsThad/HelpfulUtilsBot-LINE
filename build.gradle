@@ -46,8 +46,8 @@ apply plugin: 'idea'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.ben-manes.versions'
 
-group = 'com.linecorp.bot'
-version = '4.8.0'
+group = 'io.github.mynametsthad'
+version = '0.1.0-alpha'
 
 //set build variables based on build type (release, continuous integration, development)
 def isDevBuild
