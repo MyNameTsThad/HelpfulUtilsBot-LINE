@@ -45,7 +45,9 @@ public class HelpfulUtilsBot {
     @EventMapping
     public Message handleCommandMessageEvent(MessageEvent<TextMessageContent> event) {
         if (event.getMessage().getText().startsWith(">")){
-            return new TextMessage("Command Recognized: '" + event.getMessage().getText().substring(1) + "'");
+            TextMessage returnMessage = new TextMessage("Command Recognized: '" + event.getMessage().getText().substring(1) + "' \n"
+                                                        + "Sender User ID: " + event.getMessage().getText().substring(1));
+            return returnMessage;
         }
         return null;
     }
