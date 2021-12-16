@@ -34,15 +34,20 @@ import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 public class HelpfulUtilsBot {
     private final Logger log = LoggerFactory.getLogger(HelpfulUtilsBot.class);
 
+    public final String ChannelID = "1656718563";
+    public final String ChannelAccessToken = "QgMnFxnTQDaCG0p3a0QduN0IA3kDU1Sk6NXCd6u4XpZZYI+6UwxG02L+2NU8a/9HfV4Fv/ZXRz/jSRvMBdNm9oG61Isa1dFBiqN9aUChDZJ1oGWzTB588lhgwlaZ9M6A/IPT9BL5MNW26RGVWDT1ZQdB04t89/1O/w1cDnyilFU=";
+    public final String ChannelSecret = "0bf3be2ae818c27aa2caec62c1592332";
+
     public static void main(String[] args) {
         SpringApplication.run(HelpfulUtilsBot.class, args);
     }
 
     @EventMapping
-    public Message handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
-        log.info("event: " + event);
-        final String originalMessageText = event.getMessage().getText();
-        return new TextMessage(originalMessageText);
+    public Message handleCommandMessageEvent(MessageEvent<TextMessageContent> event) {
+        if (event.getMessage().getText().startsWith(">")){
+            return new TextMessage("Command Recognized: '" + event.getMessage().getText().substring(1) + "'");
+        }
+        return null;
     }
 
     @EventMapping
