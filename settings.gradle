@@ -22,9 +22,5 @@ include 'line-bot-cli'
 include 'line-bot-parser'
 
 // samples
-include 'sample-spring-boot-echo'
-include 'sample-spring-boot-echo-kotlin'
-include 'sample-spring-boot-kitchensink'
-include 'sample-manage-audience'
 include 'HelpfulUtilsBot'
 
