@@ -96,13 +96,13 @@ public class EchoApplication {
 
 The Messaging API SDK is automatically configured by the system properties. The parameters are shown below.
 
-| Parameter | Description |
-| ----- | ------ |
-| line.bot.channelToken | Channel access token for the server |
-| line.bot.channelSecret | Channel secret for the server |
+| Parameter                       | Description                                                                                                                                                    |
+|---------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| line.bot.channelToken           | Channel access token for the server                                                                                                                            |
+| line.bot.channelSecret          | Channel secret for the server                                                                                                                                  |
 | line.bot.channelTokenSupplyMode | The way to fix channel access token. (default: `FIXED`)<br>LINE Partners should change this value to `SUPPLIER` and create custom `ChannelTokenSupplier` bean. |
-| line.bot.connectTimeout | Connection timeout in milliseconds |
-| line.bot.readTimeout | Read timeout in milliseconds |
-| line.bot.writeTimeout | Write timeout in milliseconds |
-| line.bot.handler.enabled| Enable @EventMapping mechanism. (default: true)|
-| line.bot.handler.path| Path to waiting webhook. (default: `/callback`)|
+| line.bot.connectTimeout         | Connection timeout in milliseconds                                                                                                                             |
+| line.bot.readTimeout            | Read timeout in milliseconds                                                                                                                                   |
+| line.bot.writeTimeout           | Write timeout in milliseconds                                                                                                                                  |
+| line.bot.handler.enabled        | Enable @EventMapping mechanism. (default: true)                                                                                                                |
+| line.bot.handler.path           | Path to waiting webhook. (default: `/callback`)                                                                                                                |
