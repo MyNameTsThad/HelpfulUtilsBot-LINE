@@ -50,7 +50,7 @@ public class HelpfulUtilsBot {
 
     @EventMapping
     public Message handleCommandMessageEvent(MessageEvent<TextMessageContent> event) {
-        if (event.getMessage().getText().startsWith(prefix)){
+        if (event.getMessage().getText().startsWith(String.valueOf(prefix))){
             TextMessage returnMessage = new TextMessage("'" + event.getMessage().getText().substring(1) + "': Invalid command and/or syntax!");
             String rawCommand = event.getMessage().getText().substring(1);
             String[] args = rawCommand.split(" ");
