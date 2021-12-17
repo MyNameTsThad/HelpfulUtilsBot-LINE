@@ -16,6 +16,8 @@
 
 package io.github.mynametsthad.helpfulutilsbotline;
 
+import com.linecorp.bot.client.LineMessagingClient;
+import io.github.mynametsthad.helpfulutilsbotline.core.ShoppingList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -29,18 +31,27 @@ import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 @SpringBootApplication
 @LineMessageHandler
 public class HelpfulUtilsBot {
     private final Logger log = LoggerFactory.getLogger(HelpfulUtilsBot.class);
 
-    public static final int verID = 1;
-    public static final String verString = "0.1.0-alpha";
+    public static final int verID = 2;
+    public static final String verString = "0.1.1-alpha";
     public static final String packageName = "io.github.mynametsthad.helpfulutilsbotline";
 
     public static final String ChannelID = "1656718563";
     public static final String ChannelAccessToken = "QgMnFxnTQDaCG0p3a0QduN0IA3kDU1Sk6NXCd6u4XpZZYI+6UwxG02L+2NU8a/9HfV4Fv/ZXRz/jSRvMBdNm9oG61Isa1dFBiqN9aUChDZJ1oGWzTB588lhgwlaZ9M6A/IPT9BL5MNW26RGVWDT1ZQdB04t89/1O/w1cDnyilFU=";
     public static final String ChannelSecret = "0bf3be2ae818c27aa2caec62c1592332";
+
+    public final LineMessagingClient client = LineMessagingClient.builder(HelpfulUtilsBot.ChannelAccessToken).build();
+
+    //usage
+    public List<ShoppingList> lists = new ArrayList<>();
 
     public char prefix = '>';
 
@@ -62,10 +73,24 @@ public class HelpfulUtilsBot {
                 if (args.length > 1){
                     prefix = args[1].charAt(0);
                     returnMessage = new TextMessage("Prefix set to '" + prefix + "'" +
-                                                    "\n(Warning: Setting the prefix to a letter may cause unexpected bot responses in some messages.");
+                                                    "\n(Warning: Setting the prefix to a letter may cause unexpected bot responses in some messages.)");
                 }else{
                     returnMessage = new TextMessage("No prefix found! Please specify a prefix.");
                 }
+            } else if (args[0].equalsIgnoreCase("newlist") | args[0].equalsIgnoreCase("nl")) {
+                if (args.length > 1){
+                    ShoppingList list = new ShoppingList(args[1], Collections.singletonList(event.getSource().getSenderId()));
+                    lists.add(list);
+                }else{
+                    returnMessage = new TextMessage("Specify a Name!");
+                }
+            } else if (args[0].equalsIgnoreCase("viewlists") | args[0].equalsIgnoreCase("vl")) {
+                StringBuilder message2 = new StringBuilder("Shopping Lists:");
+                for (int i = 0; i < lists.size(); i++) {
+                    ShoppingList list = lists.get(i);
+                    message2.append("\n").append(i + 1).append(". ").append(list.name);
+                }
+                returnMessage = new TextMessage(message2.toString());
             }
             return returnMessage;
         }
