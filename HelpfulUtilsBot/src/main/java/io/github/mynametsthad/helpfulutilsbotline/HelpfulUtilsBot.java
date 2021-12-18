@@ -1,22 +1,8 @@
-/*
- * Copyright 2016 LINE Corporation
- *
- * LINE Corporation licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
 package io.github.mynametsthad.helpfulutilsbotline;
 
 import com.linecorp.bot.client.LineMessagingClient;
+import com.linecorp.bot.model.PushMessage;
+import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import io.github.mynametsthad.helpfulutilsbotline.core.ShoppingList;
 import io.github.mynametsthad.helpfulutilsbotline.core.ShoppingListElement;
 import org.slf4j.Logger;
@@ -43,7 +29,7 @@ public class HelpfulUtilsBot {
     private final Logger log = LoggerFactory.getLogger(HelpfulUtilsBot.class);
 
     public static final int verID = 2;
-    public static final String verString = "0.1.1-alpha";
+    public static final String verString = "0.1.2-alpha";
     public static final String packageName = "io.github.mynametsthad.helpfulutilsbotline";
 
     public static final String ChannelID = "1656718563";
@@ -83,7 +69,13 @@ public class HelpfulUtilsBot {
                 if (args.length > 1){
                     if (args[1].equalsIgnoreCase("new") | args[1].equalsIgnoreCase("n")) {
                         if (args.length > 2){
-                            ShoppingList list = new ShoppingList(args[2], Collections.singletonList(event.getSource().getSenderId()));
+                            StringBuilder newListName = new StringBuilder();
+                            for (int i = 0; i < args.length; i++) {
+                                if (i >= 2){
+                                    newListName.append(args[i]).append(" ");
+                                }
+                            }
+                            ShoppingList list = new ShoppingList(newListName.toString().trim(), Collections.singletonList(event.getSource().getSenderId()));
                             lists.add(list);
                             returnMessage = new TextMessage("Added shopping list: " + list.name);
                         }else{
@@ -119,13 +111,14 @@ public class HelpfulUtilsBot {
                                             }
                                         }
                                         listsMessage.append("\n").append("Created ")
-                                                .append(yearsAgo > 0 ? (yearsAgo > 1 ? (yearsAgo + " years") : (yearsAgo + " year")) : "")
-                                                .append(monthsAgo > 0 ? (monthsAgo > 1 ? (monthsAgo + " months") : (monthsAgo + " month")) : "")
-                                                .append(weeksAgo > 0 ? (weeksAgo > 1 ? (weeksAgo + " weeks") : (weeksAgo + " week")) : "")
-                                                .append(daysAgo > 0 ? (daysAgo > 1 ? (daysAgo + " days") : (daysAgo + " day")) : "")
-                                                .append(hoursAgo > 0 ? (hoursAgo > 1 ? (hoursAgo + " hours") : (hoursAgo + " hour")) : "")
-                                                .append(minutesAgo > 0 ? (minutesAgo > 1 ? (minutesAgo + " minutes") : (minutesAgo + " minute")) : "")
-                                                .append(secondsAgo > 0 ? (secondsAgo > 1 ? (secondsAgo + " seconds") : (secondsAgo + " second")) : "");
+                                                .append(yearsAgo > 0 ? (yearsAgo > 1 ? (yearsAgo + " years ") : (yearsAgo + " year ")) : "")
+                                                .append(monthsAgo > 0 ? (monthsAgo > 1 ? (monthsAgo + " months ") : (monthsAgo + " month ")) : "")
+                                                .append(weeksAgo > 0 ? (weeksAgo > 1 ? (weeksAgo + " weeks ") : (weeksAgo + " week ")) : "")
+                                                .append(daysAgo > 0 ? (daysAgo > 1 ? (daysAgo + " days ") : (daysAgo + " day ")) : "")
+                                                .append(hoursAgo > 0 ? (hoursAgo > 1 ? (hoursAgo + " hours ") : (hoursAgo + " hour ")) : "")
+                                                .append(minutesAgo > 0 ? (minutesAgo > 1 ? (minutesAgo + " minutes ") : (minutesAgo + " minute ")) : "")
+                                                .append(secondsAgo > 0 ? (secondsAgo > 1 ? (secondsAgo + " seconds ") : (secondsAgo + " second ")) : "")
+                                                .append("ago");
                                         returnMessage = new TextMessage(listsMessage.toString());
                                     }else{
                                         returnMessage = new TextMessage(args[2] + " is outside the Shopping List's index range!");
@@ -142,6 +135,70 @@ public class HelpfulUtilsBot {
                             }
                             returnMessage = new TextMessage(message2.toString());
                         }
+                    } else if (args[1].equalsIgnoreCase("edit") | args[1].equalsIgnoreCase("e")) {
+                        if (args.length > 2){
+                            try {
+                                int index = Integer.parseInt(args[2]);
+                                if (index <= lists.size()){
+                                    ShoppingList list = lists.get(index - 1);
+                                    if (args.length > 3){
+                                        if (args.length > 4){
+                                            if (args[3].equalsIgnoreCase("add") | args[3].equalsIgnoreCase("a")){
+                                                StringBuilder newItemName = new StringBuilder();
+                                                for (int i = 0; i < args.length; i++) {
+                                                    if (i >= 4){
+                                                        newItemName.append(args[i]).append(" ");
+                                                    }
+                                                }
+                                                if (args.length > 5){
+                                                    try {
+                                                        int count = Integer.parseInt(args[5]);
+                                                        list.AddElements(new ShoppingListElement(newItemName.toString().trim(), count));
+                                                        returnMessage = new TextMessage("Added item '" + count + " of " + newItemName.toString().trim() + "' to Shopping List '" + list.name + "'");
+                                                    }catch (NumberFormatException e){
+                                                        list.AddElements(new ShoppingListElement(newItemName.toString().trim(), 1));
+                                                        returnMessage = new TextMessage(args[5] + " is Not a Number! Using default quantity of 1." +
+                                                                "\nAdded item '1 of " + newItemName.toString().trim() + "' to Shopping List '" + list.name + "'");
+                                                    }
+                                                }else{
+                                                    list.AddElements(new ShoppingListElement(newItemName.toString().trim(), 1));
+                                                    returnMessage = new TextMessage("Added item '1 of " + newItemName.toString().trim() + "' to Shopping List '" + list.name + "'");
+                                                }
+                                            } else if (args[3].equalsIgnoreCase("remove") | args[3].equalsIgnoreCase("r")){
+                                                try {
+                                                    int listIndex = Integer.parseInt(args[4]);
+                                                    ShoppingListElement ele = list.elements.get(listIndex);
+                                                    list.RemoveElement(listIndex);
+                                                    returnMessage = new TextMessage("Removed item '" + ele.name + "' from Shopping List '" + list.name + "'.");
+                                                }catch (NumberFormatException e){
+                                                    returnMessage = new TextMessage(args[4] + " is Not a Number! Specify a Item Index to remove!");
+                                                }
+                                            } else if (args[3].equalsIgnoreCase("cross") | args[3].equalsIgnoreCase("cr")){
+                                                try {
+                                                    int listIndex = Integer.parseInt(args[4]);
+                                                    list.elements.get(listIndex).crossed = true;
+                                                    returnMessage = new TextMessage("Crossed item '" + list.elements.get(listIndex).name + "' from Shopping List '" + list.name + "'.");
+                                                }catch (NumberFormatException e){
+                                                    returnMessage = new TextMessage(args[4] + " is Not a Number! Specify a Item Index to cross!");
+                                                }
+                                            } else if (args[3].equalsIgnoreCase("change") | args[3].equalsIgnoreCase("ch")){
+
+                                            }
+                                        }else{
+                                            returnMessage = new TextMessage("Specify a name/index!");
+                                        }
+                                    }else{
+                                        returnMessage = new TextMessage("Specify a edit command! (add(a)/remove(rm)/cross(cr)/change(ch))");
+                                    }
+                                }else{
+                                    returnMessage = new TextMessage(args[2] + " is outside the Shopping List's index range!");
+                                }
+                            }catch (NumberFormatException e){
+                                returnMessage = new TextMessage(args[2] + " is Not a Number!");
+                            }
+                        }else{
+                            returnMessage = new TextMessage("Specify a Shopping List to edit!");
+                        }
                     }
                 }else{
                     returnMessage = new TextMessage("Specify a subcommand!");
@@ -156,4 +213,9 @@ public class HelpfulUtilsBot {
     public void handleDefaultMessageEvent(Event event) {
         System.out.println("event: " + event);
     }
+
+//    public void SendMessage(String message){
+//        TextMessage msg = new TextMessage(message);
+//        PushMessage pushMsg = new PushMessage(, msg)
+//    }
 }

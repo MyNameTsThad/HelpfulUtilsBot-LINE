@@ -20,4 +20,7 @@ public class ShoppingList {
     public void AddElements(ShoppingListElement... elements){
         this.elements.addAll(Arrays.asList(elements));
     }
+    public void RemoveElement(int index){
+        elements.remove(index);
+    }
 }
