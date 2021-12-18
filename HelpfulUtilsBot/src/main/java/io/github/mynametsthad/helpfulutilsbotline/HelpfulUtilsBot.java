@@ -18,6 +18,7 @@ package io.github.mynametsthad.helpfulutilsbotline;
 
 import com.linecorp.bot.client.LineMessagingClient;
 import io.github.mynametsthad.helpfulutilsbotline.core.ShoppingList;
+import io.github.mynametsthad.helpfulutilsbotline.core.ShoppingListElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -33,6 +34,7 @@ import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootApplication
@@ -88,12 +90,58 @@ public class HelpfulUtilsBot {
                             returnMessage = new TextMessage("Specify a Name!");
                         }
                     } else if (args[1].equalsIgnoreCase("view") | args[1].equalsIgnoreCase("v")) {
-                        StringBuilder message2 = new StringBuilder("Shopping Lists:");
-                        for (int i = 0; i < lists.size(); i++) {
-                            ShoppingList list = lists.get(i);
-                            message2.append("\n").append(i + 1).append(". ").append(list.name);
+                        if (args.length > 2){
+                            if (lists.isEmpty()){
+                                returnMessage = new TextMessage("There are no Shopping lists!");
+                            }else{
+                                try {
+                                    int index = Integer.parseInt(args[2]);
+                                    if (index <= lists.size()){
+                                        ShoppingList list = lists.get(index - 1);
+
+                                        //time calculation
+                                        long timeDifference = new Date().getTime() - list.createdTimestamp; //time in milliseconds
+                                        long yearsAgo = (long) Math.floor(timeDifference / 31540000000D);
+                                        long monthsAgo = (long) Math.floor((timeDifference - (yearsAgo * 31540000000D)) / 2628000000D);
+                                        long weeksAgo = (long) Math.floor((timeDifference - (yearsAgo * 31540000000D) - (monthsAgo * 2628000000D)) / 604800000D);
+                                        long daysAgo = (long) Math.floor((timeDifference - (yearsAgo * 31540000000D) - (monthsAgo * 2628000000D) - (weeksAgo * 604800000D)) / 86400000D);
+                                        long hoursAgo = (long) Math.floor((timeDifference - (yearsAgo * 31540000000D) - (monthsAgo * 2628000000D) - (weeksAgo * 604800000D) - (daysAgo * 86400000D)) / 3600000D);
+                                        long minutesAgo = (long) Math.floor((timeDifference - (yearsAgo * 31540000000D) - (monthsAgo * 2628000000D) - (weeksAgo * 604800000D) - (daysAgo * 86400000D) - (hoursAgo * 3600000D)) / 60000D);
+                                        long secondsAgo = (long) Math.floor((timeDifference - (yearsAgo * 31540000000D) - (monthsAgo * 2628000000D) - (weeksAgo * 604800000D) - (daysAgo * 86400000D) - (hoursAgo * 3600000D) - (minutesAgo * 60000D)) / 1000D);
+
+                                        StringBuilder listsMessage = new StringBuilder("Shopping List '" + list.name + "':");
+                                        for (int i = 0; i < list.elements.size(); i++) {
+                                            ShoppingListElement element = list.elements.get(i);
+                                            if (element.crossed){
+                                                listsMessage.append("\n").append(i + 1).append(". ~").append(list.name).append("~");
+                                            }else{
+                                                listsMessage.append("\n").append(i + 1).append(". ").append(list.name);
+                                            }
+                                            listsMessage.append("\n").append("Created ")
+                                                    .append(yearsAgo > 0 ? (yearsAgo > 1 ? (yearsAgo + " years") : (yearsAgo + " year")) : "")
+                                                    .append(monthsAgo > 0 ? (monthsAgo > 1 ? (monthsAgo + " months") : (monthsAgo + " month")) : "")
+                                                    .append(weeksAgo > 0 ? (weeksAgo > 1 ? (weeksAgo + " weeks") : (weeksAgo + " week")) : "")
+                                                    .append(daysAgo > 0 ? (daysAgo > 1 ? (daysAgo + " days") : (daysAgo + " day")) : "")
+                                                    .append(hoursAgo > 0 ? (hoursAgo > 1 ? (hoursAgo + " hours") : (hoursAgo + " hour")) : "")
+                                                    .append(minutesAgo > 0 ? (minutesAgo > 1 ? (minutesAgo + " minutes") : (minutesAgo + " minute")) : "")
+                                                    .append(secondsAgo > 0 ? (secondsAgo > 1 ? (secondsAgo + " seconds") : (secondsAgo + " second")) : "");
+                                        }
+                                        returnMessage = new TextMessage(listsMessage.toString());
+                                    }else{
+                                        returnMessage = new TextMessage(args[2] + " is outside the Shopping List's index range!");
+                                    }
+                                }catch (NumberFormatException e){
+                                    returnMessage = new TextMessage(args[2] + " is Not a Number!");
+                                }
+                            }
+                        }else{
+                            StringBuilder message2 = new StringBuilder("Shopping Lists:");
+                            for (int i = 0; i < lists.size(); i++) {
+                                ShoppingList list = lists.get(i);
+                                message2.append("\n").append(i + 1).append(". ").append(list.name);
+                            }
+                            returnMessage = new TextMessage(message2.toString());
                         }
-                        returnMessage = new TextMessage(message2.toString());
                     }
                 }else{
                     returnMessage = new TextMessage("Specify a subcommand!");
