@@ -55,7 +55,7 @@ public class HelpfulUtilsBot {
     //usage
     public List<ShoppingList> lists = new ArrayList<>();
 
-    public char prefix = '>';
+    public char prefix = /*'>'*/'/';
 
     public static void main(String[] args) {
         SpringApplication.run(HelpfulUtilsBot.class, args);
