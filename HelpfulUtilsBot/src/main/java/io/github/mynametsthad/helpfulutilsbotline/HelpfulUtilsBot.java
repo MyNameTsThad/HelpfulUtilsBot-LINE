@@ -117,15 +117,15 @@ public class HelpfulUtilsBot {
                                             }else{
                                                 listsMessage.append("\n").append(i + 1).append(". ").append(list.name);
                                             }
-                                            listsMessage.append("\n").append("Created ")
-                                                    .append(yearsAgo > 0 ? (yearsAgo > 1 ? (yearsAgo + " years") : (yearsAgo + " year")) : "")
-                                                    .append(monthsAgo > 0 ? (monthsAgo > 1 ? (monthsAgo + " months") : (monthsAgo + " month")) : "")
-                                                    .append(weeksAgo > 0 ? (weeksAgo > 1 ? (weeksAgo + " weeks") : (weeksAgo + " week")) : "")
-                                                    .append(daysAgo > 0 ? (daysAgo > 1 ? (daysAgo + " days") : (daysAgo + " day")) : "")
-                                                    .append(hoursAgo > 0 ? (hoursAgo > 1 ? (hoursAgo + " hours") : (hoursAgo + " hour")) : "")
-                                                    .append(minutesAgo > 0 ? (minutesAgo > 1 ? (minutesAgo + " minutes") : (minutesAgo + " minute")) : "")
-                                                    .append(secondsAgo > 0 ? (secondsAgo > 1 ? (secondsAgo + " seconds") : (secondsAgo + " second")) : "");
                                         }
+                                        listsMessage.append("\n").append("Created ")
+                                                .append(yearsAgo > 0 ? (yearsAgo > 1 ? (yearsAgo + " years") : (yearsAgo + " year")) : "")
+                                                .append(monthsAgo > 0 ? (monthsAgo > 1 ? (monthsAgo + " months") : (monthsAgo + " month")) : "")
+                                                .append(weeksAgo > 0 ? (weeksAgo > 1 ? (weeksAgo + " weeks") : (weeksAgo + " week")) : "")
+                                                .append(daysAgo > 0 ? (daysAgo > 1 ? (daysAgo + " days") : (daysAgo + " day")) : "")
+                                                .append(hoursAgo > 0 ? (hoursAgo > 1 ? (hoursAgo + " hours") : (hoursAgo + " hour")) : "")
+                                                .append(minutesAgo > 0 ? (minutesAgo > 1 ? (minutesAgo + " minutes") : (minutesAgo + " minute")) : "")
+                                                .append(secondsAgo > 0 ? (secondsAgo > 1 ? (secondsAgo + " seconds") : (secondsAgo + " second")) : "");
                                         returnMessage = new TextMessage(listsMessage.toString());
                                     }else{
                                         returnMessage = new TextMessage(args[2] + " is outside the Shopping List's index range!");
