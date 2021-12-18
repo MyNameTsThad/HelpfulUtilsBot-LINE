@@ -62,7 +62,7 @@ public class HelpfulUtilsBot {
     @EventMapping
     public Message handleCommandMessageEvent(MessageEvent<TextMessageContent> event) {
         if (event.getMessage().getText().startsWith(String.valueOf(prefix))){
-            TextMessage returnMessage = new TextMessage("'" + event.getMessage().getText().substring(1) + "': Invalid command and/or syntax!");
+            TextMessage returnMessage = new TextMessage("'" + event.getMessage().getText().substring(1) + "': Invalid command(s) and/or syntax!");
             String rawCommand = event.getMessage().getText().substring(1);
             String[] args = rawCommand.split(" ");
             if (args[0].equalsIgnoreCase("ver")){
@@ -77,20 +77,27 @@ public class HelpfulUtilsBot {
                 }else{
                     returnMessage = new TextMessage("No prefix found! Please specify a prefix.");
                 }
-            } else if (args[0].equalsIgnoreCase("newlist") | args[0].equalsIgnoreCase("nl")) {
+            } else if (args[0].equalsIgnoreCase("list") | args[0].equalsIgnoreCase("l")) {
                 if (args.length > 1){
-                    ShoppingList list = new ShoppingList(args[1], Collections.singletonList(event.getSource().getSenderId()));
-                    lists.add(list);
+                    if (args[1].equalsIgnoreCase("new") | args[1].equalsIgnoreCase("n")) {
+                        if (args.length > 2){
+                            ShoppingList list = new ShoppingList(args[2], Collections.singletonList(event.getSource().getSenderId()));
+                            lists.add(list);
+                            returnMessage = new TextMessage("Added shopping list: " + list.name);
+                        }else{
+                            returnMessage = new TextMessage("Specify a Name!");
+                        }
+                    } else if (args[1].equalsIgnoreCase("view") | args[1].equalsIgnoreCase("v")) {
+                        StringBuilder message2 = new StringBuilder("Shopping Lists:");
+                        for (int i = 0; i < lists.size(); i++) {
+                            ShoppingList list = lists.get(i);
+                            message2.append("\n").append(i + 1).append(". ").append(list.name);
+                        }
+                        returnMessage = new TextMessage(message2.toString());
+                    }
                 }else{
-                    returnMessage = new TextMessage("Specify a Name!");
+                    returnMessage = new TextMessage("Specify a subcommand!");
                 }
-            } else if (args[0].equalsIgnoreCase("viewlists") | args[0].equalsIgnoreCase("vl")) {
-                StringBuilder message2 = new StringBuilder("Shopping Lists:");
-                for (int i = 0; i < lists.size(); i++) {
-                    ShoppingList list = lists.get(i);
-                    message2.append("\n").append(i + 1).append(". ").append(list.name);
-                }
-                returnMessage = new TextMessage(message2.toString());
             }
             return returnMessage;
         }
