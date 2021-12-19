@@ -105,9 +105,9 @@ public class HelpfulUtilsBot {
                                         for (int i = 0; i < list.elements.size(); i++) {
                                             ShoppingListElement element = list.elements.get(i);
                                             if (element.crossed) {
-                                                listsMessage.append("\n").append(i + 1).append(". ~").append(element.name).append("~");
+                                                listsMessage.append("\n").append(i + 1).append(". ~").append(element.quantity).append(" of ").append(element.name).append("~");
                                             } else {
-                                                listsMessage.append("\n").append(i + 1).append(". ").append(element.name);
+                                                listsMessage.append("\n").append(i + 1).append(". ").append(element.quantity).append(" of ").append(element.name);
                                             }
                                         }
                                         listsMessage.append("\n").append("Created ")
@@ -124,7 +124,7 @@ public class HelpfulUtilsBot {
                                         returnMessage = new TextMessage(args[2] + " is outside the Shopping List's index range!");
                                     }
                                 } catch (NumberFormatException e) {
-                                    returnMessage = new TextMessage(args[2] + " is Not a Number!");
+                                    returnMessage = new TextMessage(args[2] + " is Not a Number! :1");
                                 }
                             }
                         } else {
@@ -208,7 +208,7 @@ public class HelpfulUtilsBot {
                                     returnMessage = new TextMessage(args[2] + " is outside the Shopping List's index range!");
                                 }
                             } catch (NumberFormatException e) {
-                                returnMessage = new TextMessage(args[2] + " is Not a Number!");
+                                returnMessage = new TextMessage(args[2] + " is Not a Number! :2");
                             }
                         } else {
                             returnMessage = new TextMessage("Specify a Shopping List to edit!");
