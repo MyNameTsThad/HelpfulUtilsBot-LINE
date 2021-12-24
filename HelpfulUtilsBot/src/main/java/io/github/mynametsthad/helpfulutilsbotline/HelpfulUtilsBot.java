@@ -145,28 +145,22 @@ public class HelpfulUtilsBot {
                                         if (args.length > 4) {
                                             if (args[3].equalsIgnoreCase("add") | args[3].equalsIgnoreCase("a")) {
                                                 StringBuilder newItemName = new StringBuilder();
-                                                boolean isStop = false;
-                                                int countIndex = -1;
                                                 for (int i = 0; i < args.length; i++) {
-                                                    if (i >= 4 && !isStop) {
-                                                        if (args[i].startsWith("x") | args[i].startsWith("X")) {
-                                                            try {
-                                                                int count = Integer.parseInt(args[i].substring(1));
-                                                                isStop = true;
-                                                                countIndex = i;
-                                                            } catch (NumberFormatException e) {
-                                                                newItemName.append(args[i]).append(" ");
-                                                            }
-                                                        } else {
-                                                            newItemName.append(args[i]).append(" ");
-                                                        }
+                                                    if (i >= 5){
+                                                        newItemName.append(args[i]).append(" ");
                                                     }
                                                 }
-                                                if (countIndex != -1) {
-                                                    int count = Integer.parseInt(args[countIndex]);
-                                                    list.AddElements(new ShoppingListElement(newItemName.toString().trim(), count));
-                                                    returnMessage = new TextMessage("Added item '" + count + " of " + newItemName.toString().trim() + "' to Shopping List '" + list.name + "'");
-                                                } else {
+                                                if (args.length > 5){
+                                                    try {
+                                                        int count = Integer.parseInt(args[4]);
+                                                        list.AddElements(new ShoppingListElement(newItemName.toString().trim(), count));
+                                                        returnMessage = new TextMessage("Added item '" + count + " of " + newItemName.toString().trim() + "' to Shopping List '" + list.name + "'");
+                                                    }catch (NumberFormatException e){
+                                                        list.AddElements(new ShoppingListElement(newItemName.toString().trim(), 1));
+                                                        returnMessage = new TextMessage(args[4] + " is Not a Number! Using default quantity of 1." +
+                                                                "\nAdded item '1 of " + newItemName.toString().trim() + "' to Shopping List '" + list.name + "'");
+                                                    }
+                                                }else{
                                                     list.AddElements(new ShoppingListElement(newItemName.toString().trim(), 1));
                                                     returnMessage = new TextMessage("Added item '1 of " + newItemName.toString().trim() + "' to Shopping List '" + list.name + "'");
                                                 }
