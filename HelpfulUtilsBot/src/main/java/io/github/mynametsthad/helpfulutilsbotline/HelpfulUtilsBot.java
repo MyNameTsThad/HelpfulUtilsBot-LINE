@@ -146,18 +146,18 @@ public class HelpfulUtilsBot {
                                             if (args[3].equalsIgnoreCase("add") | args[3].equalsIgnoreCase("a")) {
                                                 StringBuilder newItemName = new StringBuilder();
                                                 for (int i = 0; i < args.length; i++) {
-                                                    if (i >= 5){
+                                                    if (i >= 4){
                                                         newItemName.append(args[i]).append(" ");
                                                     }
                                                 }
                                                 if (args.length > 5){
                                                     try {
-                                                        int count = Integer.parseInt(args[4]);
+                                                        int count = Integer.parseInt(args[5]);
                                                         list.AddElements(new ShoppingListElement(newItemName.toString().trim(), count));
                                                         returnMessage = new TextMessage("Added item '" + count + " of " + newItemName.toString().trim() + "' to Shopping List '" + list.name + "'");
                                                     }catch (NumberFormatException e){
                                                         list.AddElements(new ShoppingListElement(newItemName.toString().trim(), 1));
-                                                        returnMessage = new TextMessage(args[4] + " is Not a Number! Using default quantity of 1." +
+                                                        returnMessage = new TextMessage(args[5] + " is Not a Number! Using default quantity of 1." +
                                                                 "\nAdded item '1 of " + newItemName.toString().trim() + "' to Shopping List '" + list.name + "'");
                                                     }
                                                 }else{
