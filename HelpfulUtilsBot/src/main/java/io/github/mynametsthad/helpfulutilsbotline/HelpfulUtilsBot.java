@@ -26,6 +26,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 @LineMessageHandler
@@ -51,19 +54,35 @@ public class HelpfulUtilsBot {
     public char prefix = /*'>'*/'/';
 
     public HelpfulUtilsBot() {
-        new java.util.Timer("tick").scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                for (TimerInstance instance : runningTimers) {
-                    if (instance.isPaused()) {
-                        instance.setStartTime(instance.getStartTime() + 1000L);
-                    } else {
-                        instance.setTimeLeft(instance.getTimeLeft() - 1000L);
-                    }
-                    log.info("tick called");
+        log.info("constructor");
+//        new java.util.Timer("tick").scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                for (TimerInstance instance : runningTimers) {
+//                    if (instance.isPaused()) {
+//                        instance.setStartTime(instance.getStartTime() + 1000L);
+//                    } else {
+//                        instance.setTimeLeft(instance.getTimeLeft() - 1000L);
+//                    }
+//                    log.info("tick called");
+//                }
+//            }
+//        }, 1000, 1000);
+
+        Runnable tick = () -> {
+            for (TimerInstance instance : runningTimers) {
+                if (instance.isPaused()) {
+                    instance.setStartTime(instance.getStartTime() + 1000L);
+                } else {
+                    instance.setTimeLeft(instance.getTimeLeft() - 1000L);
                 }
+                log.info("tick called");
             }
-        }, 1000, 1000);
+        };
+
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(tick, 0, 1, TimeUnit.SECONDS);
+
     }
 
     public static void main(String[] args) {
