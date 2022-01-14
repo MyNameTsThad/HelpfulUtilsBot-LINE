@@ -32,8 +32,8 @@ import java.util.TimerTask;
 public class HelpfulUtilsBot {
     private final Logger log = LoggerFactory.getLogger(HelpfulUtilsBot.class);
 
-    public static final int verID = 2;
-    public static final String verString = "0.1.3-alpha";
+    public static final int verID = 3;
+    public static final String verString = "0.1.4-alpha";
     public static final String packageName = "io.github.mynametsthad.helpfulutilsbotline";
 
     public static final String ChannelID = "1656718563";
