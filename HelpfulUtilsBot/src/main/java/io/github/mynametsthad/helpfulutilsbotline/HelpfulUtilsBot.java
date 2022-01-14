@@ -20,6 +20,8 @@ import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,41 +55,30 @@ public class HelpfulUtilsBot {
 
     public char prefix = /*'>'*/'/';
 
-    public HelpfulUtilsBot() {
-        log.info("constructor");
-//        new java.util.Timer("tick").scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                for (TimerInstance instance : runningTimers) {
-//                    if (instance.isPaused()) {
-//                        instance.setStartTime(instance.getStartTime() + 1000L);
-//                    } else {
-//                        instance.setTimeLeft(instance.getTimeLeft() - 1000L);
-//                    }
-//                    log.info("tick called");
-//                }
-//            }
-//        }, 1000, 1000);
+    public static void main(String[] args) {
+        SpringApplication.run(HelpfulUtilsBot.class, args);
+    }
 
+    @EventListener(ApplicationReadyEvent.class)
+    public void doSomethingAfterStartup() {
         Runnable tick = () -> {
-            for (TimerInstance instance : runningTimers) {
-                if (instance.isPaused()) {
-                    instance.setStartTime(instance.getStartTime() + 1000L);
-                } else {
-                    instance.setTimeLeft(instance.getTimeLeft() - 1000L);
+            if (!runningTimers.isEmpty()){
+                for (TimerInstance instance : runningTimers) {
+                    if (instance.isPaused()) {
+                        instance.setStartTime(instance.getStartTime() + 1000L);
+                    } else {
+                        instance.setTimeLeft(instance.getTimeLeft() - 1000L);
+                    }
+                    log.info("set");
                 }
-                log.info("tick called");
             }
+            log.info("tick called");
         };
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(tick, 0, 1, TimeUnit.SECONDS);
-
     }
 
-    public static void main(String[] args) {
-        SpringApplication.run(HelpfulUtilsBot.class, args);
-    }
 
     @EventMapping
     public Message handleCommandMessageEvent(MessageEvent<TextMessageContent> event) {
