@@ -1,4 +1,4 @@
 line.bot:
-  channelToken: 'test-channel-token'
-  channelSecret: 'test-channel-secret'
+  channelToken: 0bf3be2ae818c27aa2caec62c1592332
+  channelSecret: QgMnFxnTQDaCG0p3a0QduN0IA3kDU1Sk6NXCd6u4XpZZYI+6UwxG02L+2NU8a/9HfV4Fv/ZXRz/jSRvMBdNm9oG61Isa1dFBiqN9aUChDZJ1oGWzTB588lhgwlaZ9M6A/IPT9BL5MNW26RGVWDT1ZQdB04t89/1O/w1cDnyilFU=
   handler.path: /callback
