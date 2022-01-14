@@ -50,22 +50,24 @@ public class HelpfulUtilsBot {
 
     public char prefix = /*'>'*/'/';
 
+    public HelpfulUtilsBot() {
+        new java.util.Timer("tick").scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                for (TimerInstance instance : runningTimers) {
+                    if (instance.isPaused()) {
+                        instance.setStartTime(instance.getStartTime() + 1000L);
+                    } else {
+                        instance.setTimeLeft(instance.getTimeLeft() - 1000L);
+                    }
+                    log.info("tick called");
+                }
+            }
+        }, 1000, 1000);
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(HelpfulUtilsBot.class, args);
-
-        new java.util.Timer("tick")
-                .schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        for (TimerInstance instance : runningTimers) {
-                            if (instance.isPaused()){
-                                instance.setStartTime(instance.getStartTime() + 1000L);
-                            }else{
-                                instance.setTimeLeft(instance.getTimeLeft() - 1000L);
-                            }
-                        }
-                    }
-                }, 1000L);
     }
 
     @EventMapping
@@ -498,9 +500,9 @@ public class HelpfulUtilsBot {
                     } else if (args[1].equalsIgnoreCase("view") | args[1].equalsIgnoreCase("v")) {
                         //timer view [templates/running]
                         if (args.length > 2) {
-                            if (args[2].equalsIgnoreCase("templates") | args[1].equalsIgnoreCase("t")) {
+                            if (args[2].equalsIgnoreCase("templates") | args[2].equalsIgnoreCase("t")) {
                                 StringBuilder message = new StringBuilder("Timer templates for bot instance: " + timers.size() + " instances." +
-                                        "\n=======================");
+                                        "\n=======================\n");
                                 for (int i = 0; i < timers.size(); i++) {
                                     Timer timer = timers.get(i);
                                     List<Long> times = Utils.getFormattedTimeDiffrence(timer.getDurationMillis(), 0, 7);
@@ -515,9 +517,9 @@ public class HelpfulUtilsBot {
                                             .append(") (Timer ID: ").append(timer.getId()).append(" )");
                                 }
                                 returnMessage = new TextMessage(message.toString());
-                            } else if (args[2].equalsIgnoreCase("running") | args[1].equalsIgnoreCase("r")) {
+                            } else if (args[2].equalsIgnoreCase("running") | args[2].equalsIgnoreCase("r")) {
                                 StringBuilder message = new StringBuilder("Running Timers for bot instance: " + runningTimers.size() + " running." +
-                                        "\n=======================");
+                                        "\n=======================\n");
                                 for (int i = 0; i < runningTimers.size(); i++) {
                                     TimerInstance timer = runningTimers.get(i);
                                     List<Long> times = Utils.getFormattedTimeDiffrence(timer.getTimeLeft(), 0, 7);
