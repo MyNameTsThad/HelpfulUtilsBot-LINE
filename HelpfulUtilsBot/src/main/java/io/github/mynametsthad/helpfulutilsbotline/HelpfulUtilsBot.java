@@ -303,15 +303,16 @@ public class HelpfulUtilsBot {
                             }
                             Timer timer = new Timer(newTimerName.toString().trim(), Utils.timeToMillis(years, months, weeks, days, hours, minutes, seconds));
                             timers.add(timer);
-                            StringBuilder message = new StringBuilder("Created new Timer: '" + newTimerName + "' with a duration of ");
+                            StringBuilder message = new StringBuilder("Created new Timer: '" + newTimerName.toString().trim() + "' with a duration of ");
                             message.append(years > 0 ? (years > 1 ? (years + " years ") : (years + " year ")) : "")
                                     .append(months > 0 ? (months > 1 ? (months + " months ") : (months + " month ")) : "")
                                     .append(weeks > 0 ? (weeks > 1 ? (weeks + " weeks ") : (weeks + " week ")) : "")
                                     .append(days > 0 ? (days > 1 ? (days + " days ") : (days + " day ")) : "")
                                     .append(hours > 0 ? (hours > 1 ? (hours + " hours ") : (hours + " hour ")) : "")
                                     .append(minutes > 0 ? (minutes > 1 ? (minutes + " minutes ") : (minutes + " minute ")) : "")
-                                    .append(seconds > 0 ? (seconds > 1 ? (seconds + " seconds.") : (seconds + " second.")) : ".");
-                            message.append("(Timer ID: ").append(timer.getId()).append(")");
+                                    .append(seconds > 0 ? (seconds > 1 ? (seconds + " seconds ") : (seconds + " second ")) : "");
+                            message.setLength(message.length() - 1);
+                            message.append(".").append(" (Timer ID: ").append(timer.getId()).append(")");
 
                             returnMessage = new TextMessage(message.toString());
                         }
@@ -338,7 +339,7 @@ public class HelpfulUtilsBot {
                                             TimerInstance instance = new TimerInstance(newTimerInstanceName.toString().trim(), timer, false);
                                             runningTimers.add(instance);
 
-                                            returnMessage = new TextMessage("Created new Timer Instance: '" + newTimerInstanceName + "' Under parent Timer: '" + timer.getName() + "'" + "(Timer Instance ID: " + timer.getId() + ")");
+                                            returnMessage = new TextMessage("Created new Timer Instance: '" + newTimerInstanceName.toString().trim() + "' Under parent Timer: '" + timer.getName() + "'" + "(Timer Instance ID: " + timer.getId() + ")");
                                         }
                                     }
                                     if (!a) {
@@ -350,6 +351,7 @@ public class HelpfulUtilsBot {
                             } else if (args[2].equalsIgnoreCase("index")) {
                                 try {
                                     int index = Integer.parseInt(args[3]);
+                                    index -= 1;
                                     boolean a = false;
                                     if (index < timers.size()) {
                                         Timer timer = timers.get(index);
@@ -367,7 +369,7 @@ public class HelpfulUtilsBot {
                                         TimerInstance instance = new TimerInstance(newTimerInstanceName.toString().trim(), timer, false);
                                         runningTimers.add(instance);
 
-                                        returnMessage = new TextMessage("Created new Timer Instance: '" + newTimerInstanceName + "' Under parent Timer: '" + timer.getName() + "'" + "(Timer Instance ID: " + timer.getId() + ")");
+                                        returnMessage = new TextMessage("Created new Timer Instance: '" + newTimerInstanceName.toString().trim() + "' Under parent Timer: '" + timer.getName() + "'" + "(Timer Instance ID: " + timer.getId() + ")");
                                     } else {
                                         returnMessage = new TextMessage(index + " is outside the Timer list's index range!");
                                     }
@@ -403,6 +405,7 @@ public class HelpfulUtilsBot {
                             } else if (args[2].equalsIgnoreCase("index")) {
                                 try {
                                     int index = Integer.parseInt(args[3]);
+                                    index -= 1;
                                     boolean a = false;
                                     if (index < runningTimers.size()) {
                                         TimerInstance timerInstance = runningTimers.get(index);
@@ -466,6 +469,7 @@ public class HelpfulUtilsBot {
                             } else if (args[2].equalsIgnoreCase("index")) {
                                 try {
                                     int index = Integer.parseInt(args[3]);
+                                    index -= 1;
                                     boolean a = false;
                                     if (index < runningTimers.size()) {
                                         TimerInstance timerInstance = runningTimers.get(index);
@@ -530,6 +534,7 @@ public class HelpfulUtilsBot {
                                 } else if (args[3].equalsIgnoreCase("index")) {
                                     try {
                                         int index = Integer.parseInt(args[4]);
+                                        index -= 1;
                                         boolean a = false;
                                         if (index < timers.size()) {
                                             Timer timer = timers.get(index);
@@ -590,6 +595,7 @@ public class HelpfulUtilsBot {
                                 } else if (args[3].equalsIgnoreCase("index")) {
                                     try {
                                         int index = Integer.parseInt(args[4]);
+                                        index -= 1;
                                         boolean a = false;
                                         if (index < runningTimers.size()) {
                                             TimerInstance timerInstance = runningTimers.get(index);
