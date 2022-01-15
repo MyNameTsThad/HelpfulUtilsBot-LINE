@@ -69,10 +69,8 @@ public class HelpfulUtilsBot {
                     } else {
                         instance.setTimeLeft(instance.getTimeLeft() - 1000L);
                     }
-                    log.info("set");
                 }
             }
-            log.info("tick called");
         };
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
@@ -258,38 +256,38 @@ public class HelpfulUtilsBot {
                             String[] durations = args[2].split(",");
                             int years = 0, months = 0, weeks = 0, days = 0, hours = 0, minutes = 0, seconds = 0;
                             if (durations.length >= 7) {
-                                years = Integer.parseInt(durations[6]);
-                                months = Integer.parseInt(durations[5]);
-                                weeks = Integer.parseInt(durations[4]);
+                                years = Integer.parseInt(durations[0]);
+                                months = Integer.parseInt(durations[1]);
+                                weeks = Integer.parseInt(durations[2]);
                                 days = Integer.parseInt(durations[3]);
-                                hours = Integer.parseInt(durations[2]);
-                                minutes = Integer.parseInt(durations[1]);
-                                seconds = Integer.parseInt(durations[0]);
+                                hours = Integer.parseInt(durations[4]);
+                                minutes = Integer.parseInt(durations[5]);
+                                seconds = Integer.parseInt(durations[6]);
                             } else if (durations.length == 6) {
-                                months = Integer.parseInt(durations[5]);
-                                weeks = Integer.parseInt(durations[4]);
-                                days = Integer.parseInt(durations[3]);
-                                hours = Integer.parseInt(durations[2]);
-                                minutes = Integer.parseInt(durations[1]);
-                                seconds = Integer.parseInt(durations[0]);
+                                months = Integer.parseInt(durations[0]);
+                                weeks = Integer.parseInt(durations[1]);
+                                days = Integer.parseInt(durations[2]);
+                                hours = Integer.parseInt(durations[3]);
+                                minutes = Integer.parseInt(durations[4]);
+                                seconds = Integer.parseInt(durations[5]);
                             } else if (durations.length == 5) {
-                                weeks = Integer.parseInt(durations[4]);
-                                days = Integer.parseInt(durations[3]);
+                                weeks = Integer.parseInt(durations[0]);
+                                days = Integer.parseInt(durations[1]);
                                 hours = Integer.parseInt(durations[2]);
-                                minutes = Integer.parseInt(durations[1]);
-                                seconds = Integer.parseInt(durations[0]);
+                                minutes = Integer.parseInt(durations[3]);
+                                seconds = Integer.parseInt(durations[4]);
                             } else if (durations.length == 4) {
-                                days = Integer.parseInt(durations[3]);
-                                hours = Integer.parseInt(durations[2]);
-                                minutes = Integer.parseInt(durations[1]);
-                                seconds = Integer.parseInt(durations[0]);
+                                days = Integer.parseInt(durations[0]);
+                                hours = Integer.parseInt(durations[1]);
+                                minutes = Integer.parseInt(durations[2]);
+                                seconds = Integer.parseInt(durations[3]);
                             } else if (durations.length == 3) {
-                                hours = Integer.parseInt(durations[2]);
+                                hours = Integer.parseInt(durations[0]);
                                 minutes = Integer.parseInt(durations[1]);
-                                seconds = Integer.parseInt(durations[0]);
+                                seconds = Integer.parseInt(durations[2]);
                             } else if (durations.length == 2) {
-                                minutes = Integer.parseInt(durations[1]);
-                                seconds = Integer.parseInt(durations[0]);
+                                minutes = Integer.parseInt(durations[0]);
+                                seconds = Integer.parseInt(durations[1]);
                             } else if (durations.length == 1) {
                                 seconds = Integer.parseInt(durations[0]);
                             }
@@ -303,7 +301,7 @@ public class HelpfulUtilsBot {
                             } else {
                                 newTimerName.append("Timer #").append(timers.size() + 1);
                             }
-                            Timer timer = new Timer(newTimerName.toString(), Utils.timeToMillis(years, months, weeks, days, hours, minutes, seconds));
+                            Timer timer = new Timer(newTimerName.toString().trim(), Utils.timeToMillis(years, months, weeks, days, hours, minutes, seconds));
                             timers.add(timer);
                             StringBuilder message = new StringBuilder("Created new Timer: '" + newTimerName + "' with a duration of ");
                             message.append(years > 0 ? (years > 1 ? (years + " years ") : (years + " year ")) : "")
@@ -337,7 +335,7 @@ public class HelpfulUtilsBot {
                                             } else {
                                                 newTimerInstanceName.append("Timer #").append(runningTimers.size() + 1);
                                             }
-                                            TimerInstance instance = new TimerInstance(newTimerInstanceName.toString(), timer, false);
+                                            TimerInstance instance = new TimerInstance(newTimerInstanceName.toString().trim(), timer, false);
                                             runningTimers.add(instance);
 
                                             returnMessage = new TextMessage("Created new Timer Instance: '" + newTimerInstanceName + "' Under parent Timer: '" + timer.getName() + "'" + "(Timer Instance ID: " + timer.getId() + ")");
@@ -366,7 +364,7 @@ public class HelpfulUtilsBot {
                                         } else {
                                             newTimerInstanceName.append("Timer #").append(runningTimers.size() + 1);
                                         }
-                                        TimerInstance instance = new TimerInstance(newTimerInstanceName.toString(), timer, false);
+                                        TimerInstance instance = new TimerInstance(newTimerInstanceName.toString().trim(), timer, false);
                                         runningTimers.add(instance);
 
                                         returnMessage = new TextMessage("Created new Timer Instance: '" + newTimerInstanceName + "' Under parent Timer: '" + timer.getName() + "'" + "(Timer Instance ID: " + timer.getId() + ")");
@@ -431,7 +429,7 @@ public class HelpfulUtilsBot {
                                     }
                                     boolean a = false;
                                     for (TimerInstance timerInstance : runningTimers) {
-                                        if (timerInstance.getName().equals(name.toString())) {
+                                        if (timerInstance.getName().equals(name.toString().trim())) {
                                             a = true;
                                             timerInstance.setPaused(true);
 
@@ -456,7 +454,7 @@ public class HelpfulUtilsBot {
                                             a = true;
                                             timerInstance.setPaused(false);
 
-                                            returnMessage = new TextMessage("Paused Timer Instance: '" + timerInstance.getName() + "'");
+                                            returnMessage = new TextMessage("Resumed Timer Instance: '" + timerInstance.getName() + "'");
                                         }
                                     }
                                     if (!a) {
@@ -474,7 +472,7 @@ public class HelpfulUtilsBot {
                                         a = true;
                                         timerInstance.setPaused(false);
 
-                                        returnMessage = new TextMessage("Paused Timer Instance: '" + timerInstance.getName() + "'");
+                                        returnMessage = new TextMessage("Resumed Timer Instance: '" + timerInstance.getName() + "'");
                                     } else {
                                         returnMessage = new TextMessage(index + " is outside the Timer list's index range!");
                                     }
@@ -494,11 +492,11 @@ public class HelpfulUtilsBot {
                                     }
                                     boolean a = false;
                                     for (TimerInstance timerInstance : runningTimers) {
-                                        if (timerInstance.getName().equals(name.toString())) {
+                                        if (timerInstance.getName().equals(name.toString().trim())) {
                                             a = true;
                                             timerInstance.setPaused(false);
 
-                                            returnMessage = new TextMessage("Paused Timer Instance: '" + timerInstance.getName() + "'");
+                                            returnMessage = new TextMessage("Resumed Timer Instance: '" + timerInstance.getName() + "'");
                                         }
                                     }
                                     if (!a) {
@@ -507,8 +505,133 @@ public class HelpfulUtilsBot {
                                 }
                             }
                         }
-                    } else if (args[1].equalsIgnoreCase("view") | args[1].equalsIgnoreCase("v")) {
-                        //timer view [templates/running]
+                    }else if (args[1].equalsIgnoreCase("delete") | args[1].equalsIgnoreCase("d")) {
+                        //timer delete <template/running> <id/index/name>
+                        if (args.length > 2) {
+                            if (args[2].equalsIgnoreCase("template") | args[2].equalsIgnoreCase("t")) {
+                                if (args[3].equalsIgnoreCase("id")) {
+                                    try {
+                                        long id = Long.parseLong(args[4]);
+                                        boolean a = false;
+                                        for (Timer timer : timers) {
+                                            if (timer.getId() == id) {
+                                                a = true;
+                                                timers.remove(timer);
+
+                                                returnMessage = new TextMessage("Deleted Timer: '" + timer.getName() + "'");
+                                            }
+                                        }
+                                        if (!a) {
+                                            returnMessage = new TextMessage(args[4] + " is Not a Valid ID!");
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        returnMessage = new TextMessage(args[4] + " is Not a Number!");
+                                    }
+                                } else if (args[3].equalsIgnoreCase("index")) {
+                                    try {
+                                        int index = Integer.parseInt(args[4]);
+                                        boolean a = false;
+                                        if (index < timers.size()) {
+                                            Timer timer = timers.get(index);
+                                            a = true;
+                                            timers.remove(timer);
+
+                                            returnMessage = new TextMessage("Deleted Timer: '" + timer.getName() + "'");
+                                        } else {
+                                            returnMessage = new TextMessage(index + " is outside the Timer list's index range!");
+                                        }
+                                        if (!a) {
+                                            returnMessage = new TextMessage(args[4] + " is Not a Valid Index!");
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        returnMessage = new TextMessage(args[4] + " is Not a Number!");
+                                    }
+                                } else if (args[3].equalsIgnoreCase("name")) {
+                                    StringBuilder name = new StringBuilder();
+                                    if (args.length > 4) {
+                                        for (int i = 0; i < args.length; i++) {
+                                            if (i >= 4) {
+                                                name.append(args[i]).append(" ");
+                                            }
+                                        }
+                                        boolean a = false;
+                                        for (Timer timer : timers) {
+                                            if (timer.getName().equals(name.toString().trim())) {
+                                                a = true;
+                                                timers.remove(timer);
+
+                                                returnMessage = new TextMessage("Deleted Timer: '" + timer.getName() + "'");
+                                            }
+                                        }
+                                        if (!a) {
+                                            returnMessage = new TextMessage(args[4] + " is Not a Valid Name!");
+                                        }
+                                    }
+                                }
+                            } else if (args[2].equalsIgnoreCase("running") | args[2].equalsIgnoreCase("r")) {
+                                if (args[3].equalsIgnoreCase("id")) {
+                                    try {
+                                        long id = Long.parseLong(args[4]);
+                                        boolean a = false;
+                                        for (TimerInstance timerInstance : runningTimers) {
+                                            if (timerInstance.getId() == id) {
+                                                a = true;
+                                                runningTimers.remove(timerInstance);
+
+                                                returnMessage = new TextMessage("Deleted Timer Instance: '" + timerInstance.getName() + "'");
+                                            }
+                                        }
+                                        if (!a) {
+                                            returnMessage = new TextMessage(args[4] + " is Not a Valid ID!");
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        returnMessage = new TextMessage(args[4] + " is Not a Number!");
+                                    }
+                                } else if (args[3].equalsIgnoreCase("index")) {
+                                    try {
+                                        int index = Integer.parseInt(args[4]);
+                                        boolean a = false;
+                                        if (index < runningTimers.size()) {
+                                            TimerInstance timerInstance = runningTimers.get(index);
+                                            a = true;
+                                            runningTimers.remove(timerInstance);
+
+                                            returnMessage = new TextMessage("Deleted Timer Instance: '" + timerInstance.getName() + "'");
+                                        } else {
+                                            returnMessage = new TextMessage(index + " is outside the Timer list's index range!");
+                                        }
+                                        if (!a) {
+                                            returnMessage = new TextMessage(args[4] + " is Not a Valid Index!");
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        returnMessage = new TextMessage(args[4] + " is Not a Number!");
+                                    }
+                                } else if (args[3].equalsIgnoreCase("name")) {
+                                    StringBuilder name = new StringBuilder();
+                                    if (args.length > 4) {
+                                        for (int i = 0; i < args.length; i++) {
+                                            if (i >= 4) {
+                                                name.append(args[i]).append(" ");
+                                            }
+                                        }
+                                        boolean a = false;
+                                        for (TimerInstance timerInstance : runningTimers) {
+                                            if (timerInstance.getName().equals(name.toString().trim())) {
+                                                a = true;
+                                                runningTimers.remove(timerInstance);
+
+                                                returnMessage = new TextMessage("Deleted Timer Instance: '" + timerInstance.getName() + "'");
+                                            }
+                                        }
+                                        if (!a) {
+                                            returnMessage = new TextMessage(args[4] + " is Not a Valid Name!");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }else if (args[1].equalsIgnoreCase("view") | args[1].equalsIgnoreCase("v")) {
+                        //timer view <templates/running>
                         if (args.length > 2) {
                             if (args[2].equalsIgnoreCase("templates") | args[2].equalsIgnoreCase("t")) {
                                 StringBuilder message = new StringBuilder("Timer templates for bot instance: " + timers.size() + " instances." +
@@ -516,7 +639,7 @@ public class HelpfulUtilsBot {
                                 for (int i = 0; i < timers.size(); i++) {
                                     Timer timer = timers.get(i);
                                     List<Long> times = Utils.getFormattedTimeDiffrence(timer.getDurationMillis(), 0, 7);
-                                    message.append(i).append(". ").append(timer.getName()).append(" (Duration: ")
+                                    message.append(i + 1).append(". ").append(timer.getName()).append(" (Duration: ")
                                             .append(times.get(0) > 0 ? (times.get(0) > 1 ? (times.get(0) + " years ") : (times.get(0) + " year ")) : "")
                                             .append(times.get(1) > 0 ? (times.get(1) > 1 ? (times.get(1) + " months ") : (times.get(1) + " month ")) : "")
                                             .append(times.get(2) > 0 ? (times.get(2) > 1 ? (times.get(2) + " weeks ") : (times.get(2) + " week ")) : "")
@@ -524,7 +647,7 @@ public class HelpfulUtilsBot {
                                             .append(times.get(4) > 0 ? (times.get(4) > 1 ? (times.get(4) + " hours ") : (times.get(4) + " hour ")) : "")
                                             .append(times.get(5) > 0 ? (times.get(5) > 1 ? (times.get(5) + " minutes ") : (times.get(5) + " minute ")) : "")
                                             .append(times.get(6) > 0 ? (times.get(6) > 1 ? (times.get(6) + " seconds") : (times.get(6) + " second")) : "")
-                                            .append(") (Timer ID: ").append(timer.getId()).append(" )");
+                                            .append(") (Timer ID: ").append(timer.getId()).append(" )").append(i + 1 == timers.size() ? "" : "\n");
                                 }
                                 returnMessage = new TextMessage(message.toString());
                             } else if (args[2].equalsIgnoreCase("running") | args[2].equalsIgnoreCase("r")) {
@@ -533,7 +656,7 @@ public class HelpfulUtilsBot {
                                 for (int i = 0; i < runningTimers.size(); i++) {
                                     TimerInstance timer = runningTimers.get(i);
                                     List<Long> times = Utils.getFormattedTimeDiffrence(timer.getTimeLeft(), 0, 7);
-                                    message.append(i).append(". ").append(timer.getName()).append(" Time Left: ").append(timer.getTimeLeft() < 0 ? "-" : "")
+                                    message.append(i + 1).append(". ").append(timer.getName()).append(" Time Left: ").append(timer.getTimeLeft() < 0 ? "-" : "")
                                             .append(times.get(0) > 0 ? (times.get(0) > 1 ? (times.get(0) + " years ") : (times.get(0) + " year ")) : "")
                                             .append(times.get(1) > 0 ? (times.get(1) > 1 ? (times.get(1) + " months ") : (times.get(1) + " month ")) : "")
                                             .append(times.get(2) > 0 ? (times.get(2) > 1 ? (times.get(2) + " weeks ") : (times.get(2) + " week ")) : "")
@@ -541,7 +664,7 @@ public class HelpfulUtilsBot {
                                             .append(times.get(4) > 0 ? (times.get(4) > 1 ? (times.get(4) + " hours ") : (times.get(4) + " hour ")) : "")
                                             .append(times.get(5) > 0 ? (times.get(5) > 1 ? (times.get(5) + " minutes ") : (times.get(5) + " minute ")) : "")
                                             .append(times.get(6) > 0 ? (times.get(6) > 1 ? (times.get(6) + " seconds") : (times.get(6) + " second")) : "")
-                                            .append(" (Timer Instance ID: ").append(timer.getId()).append(" )");
+                                            .append(" (Timer Instance ID: ").append(timer.getId()).append(" )").append(i + 1 == runningTimers.size() ? "" : "\n");;
                                 }
                                 returnMessage = new TextMessage(message.toString());
                             }

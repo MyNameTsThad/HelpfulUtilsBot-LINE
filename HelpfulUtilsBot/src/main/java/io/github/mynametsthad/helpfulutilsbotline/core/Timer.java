@@ -9,7 +9,7 @@ public class Timer {
     private long durationMillis;
 
     public Timer(String name, long durationMillis) {
-        this.id = new Random().nextLong();
+        this.id = Math.abs(new Random().nextLong());
         this.name = name;
         this.durationMillis = durationMillis;
     }

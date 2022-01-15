@@ -2,9 +2,10 @@ package io.github.mynametsthad.helpfulutilsbotline.core;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.Random;
 
 public class TimerInstance {
-    private int id;
+    private long id;
 
     private String name;
     private final long parentTimerId;
@@ -13,6 +14,7 @@ public class TimerInstance {
     private boolean isPaused;
 
     public TimerInstance(String name, Timer parentTimer, boolean isPaused) {
+        this.id = Math.abs(new Random().nextLong());
         this.name = name;
         this.parentTimerId = parentTimer.getId();
         this.startTime = new Date().getTime();
@@ -20,7 +22,7 @@ public class TimerInstance {
         this.isPaused = isPaused;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
